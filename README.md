@@ -1,2 +1,2 @@
 # FullStackOpen
-My Submissions for the Full Stack Open course
+My submissions for the Full Stack Open course
