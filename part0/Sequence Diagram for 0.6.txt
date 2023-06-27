@@ -1,0 +1,9 @@
+title Sequence Diagram for 0.6
+
+participant browser
+participant server
+
+browser ->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server ->>browser: HTTP status code 201
+note right of browser: browser stays on the same page, no additional HTTP requests
+

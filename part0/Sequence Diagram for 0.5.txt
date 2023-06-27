@@ -1,0 +1,21 @@
+title Sequence Diagram for 0.5
+
+participant browser
+participant server
+
+browser ->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+server ->>browser: HTML document - HTTP status code 200
+
+browser ->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server ->>browser: CSS file - HTTP status code 200
+browser ->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server ->>browser: JavaScript file - HTTP status code 200
+note right of browser: Browser executes the JavaScript code that fetches the JSON from the server
+browser ->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server ->>browser: [{"content":"hello world", "date":"2023-6-27"}, ...]  - HTTP status code 200
+
+
+
+
+
+
