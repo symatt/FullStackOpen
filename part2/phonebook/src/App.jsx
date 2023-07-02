@@ -3,12 +3,14 @@ import personService from './services/persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filter, setFilter] = useState('');
+	const [message, setMessage] = useState({ text: null, type: 'none' });
 
 	useEffect(() => {
 		personService.getAll().then((initialPersons) => {
@@ -36,6 +38,21 @@ const App = () => {
 							person.name !== newPerson.name ? person : returnedPerson
 						)
 					);
+				})
+				.catch((error) => {
+					setMessage({
+						text: `Information of ${newPerson.name} has been already removed from server`,
+						type: 'error',
+					});
+					setPersons(
+						persons.filter((person) => person.name !== newPerson.name)
+					);
+					setTimeout(() => {
+						setMessage({
+							text: null,
+							type: 'none',
+						});
+					}, 5000);
 				});
 		}
 	};
@@ -59,6 +76,13 @@ const App = () => {
 			setPersons([...persons, returnedPerson]);
 			setNewName('');
 			setNewNumber('');
+			setMessage({ text: `Added ${returnedPerson.name}`, type: 'success' });
+			setTimeout(() => {
+				setMessage({
+					text: null,
+					type: 'none',
+				});
+			}, 5000);
 		});
 	};
 
@@ -92,6 +116,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification text={message.text} type={message.type} />
 			<Filter filter={filter} handleSetFilter={handleSetFilter} />
 			<h2>Add a new</h2>
 			<PersonForm
