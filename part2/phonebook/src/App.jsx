@@ -72,18 +72,31 @@ const App = () => {
 			return;
 		}
 
-		personService.create(newPerson).then((returnedPerson) => {
-			setPersons([...persons, returnedPerson]);
-			setNewName('');
-			setNewNumber('');
-			setMessage({ text: `Added ${returnedPerson.name}`, type: 'success' });
-			setTimeout(() => {
-				setMessage({
-					text: null,
-					type: 'none',
-				});
-			}, 5000);
-		});
+		personService
+			.create(newPerson)
+			.then((returnedPerson) => {
+				setPersons([...persons, returnedPerson]);
+				setNewName('');
+				setNewNumber('');
+				setMessage({ text: `Added ${returnedPerson.name}`, type: 'success' });
+				setTimeout(() => {
+					setMessage({
+						text: null,
+						type: 'none',
+					});
+				}, 5000);
+			})
+			.catch((error) => {
+				const errorMessage = error.response.data.error;
+				console.log(errorMessage);
+				setMessage({ text: errorMessage, type: 'error' });
+				setTimeout(() => {
+					setMessage({
+						text: null,
+						type: 'none',
+					});
+				}, 5000);
+			});
 	};
 
 	const handleDelete = (id) => {
