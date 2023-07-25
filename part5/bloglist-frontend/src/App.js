@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notfication';
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Togglable';
 
 const App = () => {
 	const [blogs, setBlogs] = useState([]);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [user, setUser] = useState(null);
-	const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [createVisible, setCreateVisible] = useState(false);
 
 	useEffect(() => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -45,12 +44,10 @@ const App = () => {
 		setUser(null);
 	};
 
-	const addBlog = (event) => {
-		event.preventDefault();
-
-		blogService.create(newBlog).then((returnedBlog) => {
+	const addBlog = (blogObject) => {
+		blogFormRef.current.toggleVisibility();
+		blogService.create(blogObject).then((returnedBlog) => {
 			setBlogs(blogs.concat(returnedBlog));
-			setNewBlog({ title: '', author: '', url: '' });
 			setErrorMessage(
 				`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
 			);
@@ -85,32 +82,13 @@ const App = () => {
 		</form>
 	);
 
-	const blogForm = () => {
-		const hideWhenVisible = { display: createVisible ? 'none' : '' };
-		const showWhenVisible = { display: createVisible ? '' : 'none' };
+	const blogFormRef = useRef();
 
+	const blogForm = () => {
 		return (
-			<div>
-				<div style={hideWhenVisible}>
-					<button onClick={() => setCreateVisible(true)}>new note</button>
-				</div>
-				<div style={showWhenVisible}>
-					<BlogForm
-						handleSubmit={addBlog}
-						newBlog={newBlog}
-						handleTitleChange={({ target }) =>
-							setNewBlog({ ...newBlog, title: target.value })
-						}
-						handleAuthorChange={({ target }) =>
-							setNewBlog({ ...newBlog, author: target.value })
-						}
-						handleUrlChange={({ target }) =>
-							setNewBlog({ ...newBlog, url: target.value })
-						}
-					/>
-					<button onClick={() => setCreateVisible(false)}>cancel</button>
-				</div>
-			</div>
+			<Togglable buttonLabel='create new blog' ref={blogFormRef}>
+				<BlogForm createBlog={addBlog} />
+			</Togglable>
 		);
 	};
 
