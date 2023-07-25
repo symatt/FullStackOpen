@@ -17,6 +17,15 @@ const App = () => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
 	}, []);
 
+	useEffect(() => {
+		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
+		if (loggedUserJSON) {
+			const user = JSON.parse(loggedUserJSON);
+			setUser(user);
+			blogService.setToken(user.token);
+		}
+	}, []);
+
 	const handleLogin = async (event) => {
 		event.preventDefault();
 
@@ -47,7 +56,7 @@ const App = () => {
 	const addBlog = (blogObject) => {
 		blogFormRef.current.toggleVisibility();
 		blogService.create(blogObject).then((returnedBlog) => {
-			setBlogs(blogs.concat(returnedBlog));
+			blogService.getAll().then((blogs) => setBlogs(blogs));
 			setErrorMessage(
 				`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
 			);
