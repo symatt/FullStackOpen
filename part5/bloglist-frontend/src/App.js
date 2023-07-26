@@ -56,7 +56,7 @@ const App = () => {
 		}
 	};
 
-	const handleLogout = (event) => {
+	const handleLogout = () => {
 		window.localStorage.removeItem('loggedNoteappUser');
 		setUser(null);
 	};
@@ -121,7 +121,7 @@ const App = () => {
 		console.log(`${blog.title} was liked`);
 		const updatedBlog = { ...blog, likes: blog.likes + 1 };
 
-		blogService.update(blog.id, updatedBlog).then((returnedBlog) => {
+		blogService.update(blog.id, updatedBlog).then(() => {
 			blogService
 				.getAll()
 				.then((blogs) =>
@@ -141,7 +141,7 @@ const App = () => {
 			`Remove blog ${blog.title} by ${blog.author} ?`
 		);
 		if (confirmRemove) {
-			blogService.remove(blog.id).then((response) => {
+			blogService.remove(blog.id).then(() => {
 				blogService
 					.getAll()
 					.then((blogs) =>
