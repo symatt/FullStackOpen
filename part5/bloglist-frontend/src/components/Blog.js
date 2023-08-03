@@ -19,9 +19,11 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
 	};
 	// console.log(blog);
 	return (
-		<div style={blogStyle}>
+		<div style={blogStyle} id='blog' className='blog'>
 			<div className='shortDetails'>
-				{blog.title} {blog.author}
+				<span>
+					{blog.title} {blog.author}
+				</span>
 				<button onClick={toggleDetails}>{visible ? 'hide' : 'view'}</button>
 			</div>
 			<div style={showWhenVisible} className='additionalDetails'>
@@ -33,8 +35,11 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
 					{blog.url}
 				</a>
 				<br />
-				likes {blog.likes}{' '}
-				<button onClick={() => handleLike(blog)}>like</button> <br />
+				<span>likes {blog.likes}</span>
+				<button id='like-button' onClick={() => handleLike(blog)}>
+					like
+				</button>
+				<br />
 				{blog.user.name}
 				<br />
 				{user.name === blog.user.name ? (
